@@ -1,7 +1,32 @@
 .header-comp {
-    margin: 20px 30px;
+    margin: 20px 20px;
+    height: 100px;
+  
+
   .ant-row {
     align-items: center;
+
+  }
+  .call {
+    display: flex;
+    .anticon-phone{
+      font-size: 25px;
+      color:  #17CEC4;
+    }
+    .call-text {
+      display: flex;
+     flex-direction: column;
+     align-items: center;
+     :nth-child(1){
+      font-weight: bolder;
+     }
+    }
+  }
+  .user-login{
+   
+   
+    
+    
   }
    
 
