@@ -1,50 +1,118 @@
-import React, {  useState } from "react";
+import React, { useState } from "react";
 import "./filterDate.scss";
-import { DatePicker, Input } from "antd";
+import { DatePicker, Input, Button, Modal, AutoComplete } from "antd";
 import { CalendarOutlined, SearchOutlined, UserOutlined } from "@ant-design/icons";
-import Search from "antd/es/input/Search";
+import { Controller, useForm } from "react-hook-form";
+
+
+
+const hotelData = [
+  { name: "Otel 1", description: "Açıklama 1" },
+  { name: "Otel 2", description: "Açıklama 2" },
+  
+];
+
+
 
 
 const FilterDate = () => {
-  const { RangePicker } = DatePicker;
+  const { control, handleSubmit } = useForm();
+  const [formData, setFormData] = useState({});
+  const [options, setOptions] = useState([]);
+  const [selectedHotel, setSelectedHotel] = useState(null);
+  const onSubmit = (data) => {
     
-  const [selectedDates,setSelectedDates]= useState()
+    console.log("Form Verileri:", data);
+    setFormData(data);
 
-  const handleDateChange = (dates, dateStrings) => {
-    console.log("Seçilen Tarih Aralığı:", dateStrings);
-    setSelectedDates(dates); 
+   
+
   };
 
- 
+  
+
+
+  const onSearch = (value) => {
+    const filteredOptions = hotelData
+      .filter((hotel) => hotel.name.toLowerCase().includes(value.toLowerCase()))
+      .map((hotel) => ({
+        value: hotel.name,
+        label: hotel.name,
+      }));
+    setOptions(filteredOptions);
+  };
 
   return (
-    <div className="filter-comp">
+    <form onSubmit={handleSubmit(onSubmit)} className="filter-comp">
       <div className="filter-hotel">
-      <Input  style={{
-        width: 350,
-        height:60
-      }} placeholder="Nereye Gitmek İstersin?" prefix={<SearchOutlined /> } />
+        <Controller
+          control={control}
+          name="destination"
+          render={({ field }) => (
+            <>
+              <AutoComplete
+                {...field}
+                options={options}
+                onSelect={(value) => setSelectedHotel(value)}
+                onSearch={onSearch}
+                style={{
+                  width: 350,
+                  height: 60,
+                }}
+                placeholder="Otel Seçin"
+              />
+            </>
+          )}
+        />
       </div>
       <div className="filter-date">
-        <RangePicker
-          onChange={handleDateChange}
-      
-          format="YYYY-MM-DD" 
-          suffixIcon={<CalendarOutlined style={{ color: "blue" }} />}
-          style={{
-            width: 350,
-            height:60
-          }}
+        <Controller
+          control={control}
+          name="dateRange"
+          defaultValue={[]}
+          render={({ field: { value, onChange } }) => (
+            <DatePicker.RangePicker
+              value={value}
+              onChange={(dates, dateStrings) => {
+                onChange(dates);
+              }}
+              format="YYYY-MM-DD"
+              suffixIcon={<CalendarOutlined style={{ color: "blue" }} />}
+              style={{
+                width: 350,
+                height: 60,
+              }}
+            />
+          )}
         />
       </div>
       <div className="user-filter">
-      <Input  style={{
-        width: 350,
-        height:60
-      }} placeholder="default size" prefix={<UserOutlined />} />
-
+        <Controller
+          control={control}
+          name="username"
+          render={({ field }) => (
+            <Input
+              {...field}
+              style={{
+                width: 200,
+                height: 60,
+              }}
+              placeholder="Kullanıcı Adı"
+              prefix={<UserOutlined />}
+            />
+          )}
+        />
       </div>
-    </div>
+      <Button  style={{
+                width: 150,
+                height: 60,
+                background:'#0FC4CF'
+              }} type="primary" htmlType="submit">
+        ARA
+      </Button>
+     
+    </form>
+    
   );
 };
 
