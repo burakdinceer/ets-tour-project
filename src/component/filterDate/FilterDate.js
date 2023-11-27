@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, {  useState } from "react";
 import "./filterDate.scss";
 import { DatePicker, Input, Button, Modal, AutoComplete } from "antd";
 import { CalendarOutlined, SearchOutlined, UserOutlined } from "@ant-design/icons";
 import { Controller, useForm } from "react-hook-form";
+import UserModal from "./Modal/UserModal";
 
 
 
@@ -20,13 +21,24 @@ const FilterDate = () => {
   const [formData, setFormData] = useState({});
   const [options, setOptions] = useState([]);
   const [selectedHotel, setSelectedHotel] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+ 
   const onSubmit = (data) => {
     
     console.log("Form Verileri:", data);
     setFormData(data);
 
-   
 
+  };
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+  const handleCancel = () => {
+    setIsModalOpen(false);
   };
 
   
@@ -97,8 +109,9 @@ const FilterDate = () => {
                 width: 200,
                 height: 60,
               }}
-              placeholder="Kullanıcı Adı"
+              placeholder="Kişi Sayısı"
               prefix={<UserOutlined />}
+              onClick={showModal}
             />
           )}
         />
@@ -110,7 +123,10 @@ const FilterDate = () => {
               }} type="primary" htmlType="submit">
         ARA
       </Button>
-     
+      
+      <Modal  open={isModalOpen} onOk={handleOk} onCancel={handleCancel}  footer={null}>
+        <UserModal/>
+      </Modal>
     </form>
     
   );
